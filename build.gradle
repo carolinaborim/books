@@ -1,6 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'idea'
 
+repositories{
+    mavenCentral()
+}
 dependencies{
     compile 'io.dropwizard:dropwizard-core:0.9.0-rc3'
 }
