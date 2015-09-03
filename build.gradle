@@ -4,7 +4,40 @@ apply plugin: 'idea'
 repositories{
     mavenCentral()
 }
+configurations{
+    apiTestCompile.extendsFrom runtime
+}
+
+sourceSets{
+    apiTest{
+        java{
+            srcDir 'src/api-test/java'
+        }
+        compileClasspath += sourceSets.main.runtimeClasspath
+    }
+}
+
 dependencies{
     compile 'io.dropwizard:dropwizard-core:0.9.0-rc3'
     compile 'org.projectlombok:lombok:1.16.4'
+    testCompile 'io.dropwizard:dropwizard-testing:0.9.0-rc3'
+    apiTestCompile 'io.dropwizard:dropwizard-testing:0.9.0-rc3'
+    apiTestCompile 'junit:junit:4.12'
+}
+
+task apiTest(type: Test){
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+        exceptionFormat "full"
+        showStandardStreams = true
+    }
+
+    testClassesDir = sourceSets.apiTest.output.classesDir
+    classpath += sourceSets.apiTest.runtimeClasspath
+}
+
+idea {
+    module {
+        testSourceDirs += file('src/api-test/java')
+    }
 }
